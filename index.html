@@ -1,0 +1,553 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<!--
+  ══════════════════════════════════════════════════════════════════
+  MENÚ WEB · GitHub Pages (archivo único: index.html)
+  ──────────────────────────────────────────────────────────────────
+  1) Sube este archivo como  index.html  a la raíz de tu repositorio.
+  2) Activa GitHub Pages (Settings → Pages → rama main / root).
+  3) El menú se lee de  data.json  en la raíz ("/"). Si no existe,
+     se muestra el menú integrado hasta que guardes desde el editor.
+  4) PANEL OCULTO DE EDICIÓN:
+       · Ctrl + Shift + M          · URL terminada en  #admin
+       · El puntito casi invisible abajo a la derecha.
+     Allí pones tu token de GitHub (scope "repo" o fine-grained con
+     Contents: Read & write), owner, repo, rama y ruta (data.json).
+     Puedes añadir/editar/eliminar categorías y artículos, y al
+     guardar se hace commit del data.json vía API de GitHub.
+  ══════════════════════════════════════════════════════════════════
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Menú del día: sandwich, hamburguezas, frituras, cervezas, refrescos, batidos y café.">
+<title>Menú</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/great-vibes@5/index.css">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:#f8ecdd;color:#33241a;min-height:100vh;overflow-x:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(340px 220px at 8% 10%, #f6dcbf99, transparent 70%),
+      radial-gradient(300px 200px at 92% 8%, #f3d9c099, transparent 70%),
+      radial-gradient(360px 240px at 10% 76%, #e7edd899, transparent 70%),
+      radial-gradient(380px 260px at 90% 84%, #f6d8cc99, transparent 70%),
+      radial-gradient(560px 320px at 50% -4%, #fbe9d3aa, transparent 72%);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:5;pointer-events:none;opacity:.4;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.05'/></feComponentTransfer></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 18px;position:relative;z-index:1}
+
+  /* ── Hero ── */
+  header.hero{padding:30px 0 6px;text-align:center;position:relative}
+  .garland{display:flex;justify-content:center;align-items:flex-end;gap:clamp(8px,2.4vw,20px);
+    font-size:clamp(30px,6vw,52px);line-height:1;flex-wrap:wrap}
+  .garland span{display:inline-block;filter:saturate(.92) drop-shadow(0 5px 4px #00000026)}
+  .garland span:nth-child(1){transform:rotate(-14deg)}
+  .garland span:nth-child(2){transform:rotate(8deg) translateY(-4px)}
+  .garland span:nth-child(3){transform:rotate(-6deg)}
+  .garland span:nth-child(4){transform:rotate(12deg) translateY(-2px)}
+  .garland span:nth-child(5){transform:rotate(-9deg)}
+  .garland span:nth-child(6){transform:rotate(6deg) translateY(-5px)}
+  .garland span:nth-child(7){transform:rotate(-4deg)}
+  h1.script{font-family:"Great Vibes",cursive;font-weight:400;color:#151515;
+    font-size:clamp(3.4rem,10vw,5.4rem);margin:6px 0 0;line-height:1.05}
+  .tagline{color:#8a6d4f;font-size:.95rem;margin-top:2px;letter-spacing:.4px}
+
+  /* ── Barra de categorías + buscador ── */
+  .chipsBar{position:sticky;top:0;z-index:30;background:#f8ecdde6;backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);border-bottom:1px solid #eadbc266;margin-top:14px}
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:10px 18px;max-width:900px;margin:0 auto;
+    scrollbar-width:thin}
+  .chip{border:1px solid #e2c9a4;background:#fffaf0cc;color:#6b4a26;font:inherit;font-weight:700;
+    font-size:.86rem;padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;
+    transition:background .2s,color .2s,transform .15s}
+  .chip:hover{transform:translateY(-1px);background:#fff}
+  .chip.active{background:#1a56db;border-color:transparent;color:#fff}
+  .searchWrap{max-width:460px;margin:16px auto 2px;position:relative;padding:0 18px}
+  .searchWrap .lupa{position:absolute;left:32px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.6}
+  #q{width:100%;font:inherit;font-size:.98rem;padding:11px 18px 11px 40px;border-radius:999px;
+    border:1px solid #e0c69e;background:#fffdf7;color:#33241a;outline:none;transition:border .2s,box-shadow .2s}
+  #q:focus{border-color:#1a56db;box-shadow:0 0 0 3px #1a56db22}
+  #q::placeholder{color:#b09068}
+
+  /* ── Categorías / artículos ── */
+  main{padding:8px 0 10px}
+  section.cat{scroll-margin-top:92px;margin:26px 0}
+  .catTitle{display:flex;align-items:center;gap:10px;color:#1a56db;font-size:1.42rem;font-weight:800;
+    letter-spacing:.2px;margin-bottom:10px}
+  .catEmoji{font-size:1.55rem;filter:drop-shadow(0 2px 2px #00000022)}
+  ul.items{list-style:none;background:#fffdf7b8;border:1px solid #eadbc2;border-radius:18px;
+    padding:4px 20px;box-shadow:0 8px 22px #d9b98c29}
+  li.item{display:flex;align-items:baseline;gap:10px;padding:13px 0;border-bottom:1px dashed #e7d3b4}
+  li.item:last-child{border-bottom:0}
+  .iname{font-weight:600;font-size:1.05rem;color:#33241a;min-width:0}
+  .nota{display:block;font-weight:500;font-size:.8rem;color:#96754f;font-style:italic;margin-top:3px}
+  .dots{flex:1;border-bottom:2px dotted #cfae83;transform:translateY(-5px);min-width:22px}
+  .price{font-weight:800;color:#4a2f17;font-size:1.06rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .empty{text-align:center;color:#96754f;padding:40px 0;font-size:1.05rem}
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ── Pie ── */
+  footer{margin-top:44px;padding:26px 0 64px;text-align:center}
+  .garland2{font-size:clamp(24px,4.6vw,38px);display:flex;justify-content:center;gap:clamp(8px,2vw,18px);flex-wrap:wrap}
+  .garland2 span{display:inline-block;filter:saturate(.92) drop-shadow(0 4px 3px #00000022)}
+  .garland2 span:nth-child(odd){transform:rotate(-8deg)}
+  .garland2 span:nth-child(even){transform:rotate(7deg)}
+  #footDate{color:#96754f;font-size:.85rem;margin-top:12px}
+  .sideSticker{position:fixed;z-index:0;display:flex;flex-direction:column;gap:30px;font-size:42px;
+    opacity:.5;pointer-events:none;filter:saturate(.9) drop-shadow(0 3px 2px #00000022)}
+  .sl{left:16px;top:38%}.sr{right:16px;top:44%}
+  @media(max-width:1150px){.sideSticker{display:none}}
+
+  /* ── Punto oculto ── */
+  #adminDot{position:fixed;right:12px;bottom:12px;width:16px;height:16px;border-radius:50%;
+    background:#8a6d4f33;border:0;cursor:pointer;z-index:40;opacity:.45;transition:opacity .2s}
+  #adminDot:hover{opacity:1}
+
+  /* ── Overlay / panel admin ── */
+  #overlay{position:fixed;inset:0;z-index:50;background:#00000055;backdrop-filter:blur(3px);
+    display:flex;justify-content:flex-end}
+  #overlay[hidden]{display:none}
+  .panel{width:min(560px,100%);height:100%;overflow-y:auto;background:#fffaf2;padding:22px 22px 30px;
+    box-shadow:-12px 0 34px #00000033;transform:translateX(102%);transition:transform .3s ease}
+  #overlay.open .panel{transform:none}
+  .panelHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .panelHead h3{font-size:1.25rem;color:#4a2f17}
+  .xBtn{border:0;background:#f3e6cf;color:#6b4a26;width:34px;height:34px;border-radius:10px;
+    font-size:16px;cursor:pointer}
+  label.fld{display:block;font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+    color:#96754f;margin:12px 0 4px}
+  .panel input[type=text],.panel input[type=password],.panel input[type=number]{
+    width:100%;font:inherit;font-size:.95rem;padding:10px 12px;border-radius:10px;border:1px solid #d8bd93;
+    background:#fffdf7;color:#33241a;outline:none}
+  .panel input:focus{border-color:#1a56db;box-shadow:0 0 0 3px #1a56db1e}
+  .row2{display:flex;gap:10px}.row2>div{flex:1}
+  .btn{font:inherit;font-weight:700;font-size:.9rem;padding:10px 14px;border-radius:10px;border:0;
+    cursor:pointer;transition:transform .12s,filter .2s}
+  .btn:active{transform:scale(.97)}
+  .btn.primary{background:#1a56db;color:#fff}
+  .btn.ghost{background:#fff;border:1px solid #d8bd93;color:#6b4a26}
+  .btn.danger{background:#fff;border:1px solid #e4b6b1;color:#b3261e}
+  .btn.mini{padding:6px 9px;font-size:.8rem;border-radius:8px}
+  .btn.block{width:100%;margin-top:16px}
+  .err{color:#b3261e;font-size:.85rem;margin-top:10px;min-height:1.2em;white-space:pre-wrap}
+  .catCard{background:#fff;border:1px solid #e6d2b0;border-radius:14px;padding:12px;margin-bottom:12px}
+  .catHead{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .catHead input.emoji{width:56px;text-align:center;flex:0 0 56px}
+  .catHead input.grow{flex:1 1 140px}
+  .itemRows{margin:8px 0 4px}
+  .itemRow{display:flex;gap:6px;margin:6px 0;flex-wrap:wrap}
+  .itemRow .i-name{flex:2 1 130px}
+  .itemRow .i-price{flex:0 0 88px;width:88px}
+  .itemRow .i-nota{flex:1 1 110px}
+  .itemRow .i-del{flex:0 0 34px;width:34px}
+  .toolbar{position:sticky;bottom:0;background:#fffaf2f2;backdrop-filter:blur(6px);
+    display:flex;flex-wrap:wrap;gap:8px;padding:12px 0 4px;border-top:1px solid #e6d2b0;margin-top:14px}
+  details.help{margin-top:16px;font-size:.88rem;color:#6b4a26}
+  details.help summary{cursor:pointer;font-weight:800;color:#4a2f17}
+  details.help ol{margin:8px 0 0 18px;line-height:1.55}
+  details.help a{color:#1a56db}
+  pre#jsonPre{background:#f3e6cf;border-radius:10px;padding:10px;font-size:.72rem;overflow:auto;
+    max-height:220px;margin-top:8px}
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(22px);z-index:60;
+    background:#22150c;color:#fff8ee;padding:11px 20px;border-radius:999px;font-size:.9rem;font-weight:600;
+    opacity:0;transition:.28s;pointer-events:none;box-shadow:0 8px 24px #0006}
+  #toast.show{opacity:1;transform:translateX(-50%)}
+  @media print{.chipsBar,.searchWrap,#adminDot,.sideSticker{display:none}}
+</style>
+</head>
+<body>
+
+<div class="sideSticker sl" aria-hidden="true"><span>🍩</span><span>🧁</span></div>
+<div class="sideSticker sr" aria-hidden="true"><span>🍩</span><span>🧁</span></div>
+
+<header class="hero wrap">
+  <div class="garland" aria-hidden="true">
+    <span>🥐</span><span>🍅</span><span>🧀</span><span>🌿</span><span>☕</span><span>🫘</span><span>🥪</span>
+  </div>
+  <h1 class="script">Menu:</h1>
+  <p class="tagline">Hecho con sabor de casa · precios en CUP</p>
+</header>
+
+<nav class="chipsBar"><div class="chips" id="chips"></div></nav>
+
+<div class="searchWrap">
+  <span class="lupa" aria-hidden="true">🔍</span>
+  <input id="q" type="search" placeholder="Buscar en el menú…" autocomplete="off">
+</div>
+
+<main class="wrap" id="menu"></main>
+
+<footer>
+  <div class="garland2" aria-hidden="true">
+    <span>🍩</span><span>🫒</span><span>🥯</span><span>🧀</span><span>☕</span><span>🥖</span><span>🧁</span>
+  </div>
+  <p id="footDate"></p>
+</footer>
+
+<button id="adminDot" title="" aria-hidden="true" tabindex="-1"></button>
+
+<div id="overlay" hidden>
+  <aside class="panel" role="dialog" aria-modal="true" aria-label="Editor del menú">
+    <div class="panelHead">
+      <h3>✏️ Editor del menú</h3>
+      <button class="xBtn" id="closeBtn" title="Cerrar">✕</button>
+    </div>
+
+    <div id="loginView">
+      <p style="font-size:.9rem;color:#6b4a26">Conecta con tu token de GitHub para editar el <b>data.json</b> del repositorio.</p>
+      <form id="loginForm">
+        <label class="fld" for="tk">Token de GitHub</label>
+        <input type="password" id="tk" placeholder="ghp_… / github_pat_…" autocomplete="off">
+        <label class="fld" for="ow">Owner (usuario u organización)</label>
+        <input type="text" id="ow" placeholder="mi-usuario" autocomplete="off">
+        <label class="fld" for="rp">Repositorio</label>
+        <input type="text" id="rp" placeholder="mi-menu" autocomplete="off">
+        <div class="row2">
+          <div><label class="fld" for="br">Rama</label><input type="text" id="br" value="main"></div>
+          <div><label class="fld" for="pt">Ruta del archivo</label><input type="text" id="pt" value="data.json"></div>
+        </div>
+        <button class="btn primary block" type="submit" id="connectBtn">🔐 Conectar</button>
+      </form>
+      <p class="err" id="loginMsg"></p>
+      <details class="help">
+        <summary>¿Cómo funciona? (ayuda)</summary>
+        <ol>
+          <li>Crea un token: <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a> (classic con scope <b>repo</b>, o fine-grained con permiso <b>Contents: Read and write</b> sobre tu repositorio).</li>
+          <li>Este <b>index.html</b> debe estar publicado con GitHub Pages en ese repositorio.</li>
+          <li>Al guardar, el editor hace <b>commit</b> del archivo <b>data.json</b> en la ruta indicada (lo crea si no existe).</li>
+          <li>La página lee <b>data.json</b> desde la raíz ("/") en cada carga; si no existe, muestra el menú integrado.</li>
+          <li>El token queda guardado solo en este navegador (localStorage). Usa "🚪 Salir" para borrarlo.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div id="editorView" hidden>
+      <div id="edCats"></div>
+      <button class="btn ghost" id="addCatBtn">➕ Añadir categoría</button>
+      <details class="help">
+        <summary>Ver data.json actual</summary>
+        <pre id="jsonPre"></pre>
+      </details>
+      <div class="toolbar">
+        <button class="btn primary" id="saveBtn">💾 Guardar en GitHub</button>
+        <button class="btn ghost" id="applyBtn">🧪 Aplicar local</button>
+        <button class="btn ghost" id="downloadBtn">⬇️ Descargar</button>
+        <button class="btn ghost" id="copyBtn">📋 Copiar</button>
+        <button class="btn danger" id="resetBtn">♻️ Restaurar</button>
+        <button class="btn danger" id="logoutBtn">🚪 Salir</button>
+      </div>
+      <p class="err" id="saveMsg"></p>
+    </div>
+  </aside>
+</div>
+
+<div id="toast"></div>
+<noscript><p style="text-align:center;padding:20px">Activa JavaScript para ver el menú.</p></noscript>
+
+<script>
+"use strict";
+/* ══════════ MENÚ INTEGRADO (respaldo si no hay data.json) ══════════ */
+const DEFAULT_DATA = {
+  "actualizado": "2026-10-09",
+  "categorias": [
+    { "emoji": "🥪", "nombre": "Sandwis y Hamburguezas", "items": [
+      { "nombre": "Pan con Hamburguezas", "precio": 500 },
+      { "nombre": "Super Hamburguezas Doble Carne", "precio": 1000 },
+      { "nombre": "Pan con Tortilla", "precio": 320 },
+      { "nombre": "Sandwis de Jamón y Queso", "precio": 400 },
+      { "nombre": "Sandwis de Jamón", "precio": 350 }
+    ]},
+    { "emoji": "🍳", "nombre": "Frituras", "items": [
+      { "nombre": "Perlán", "precio": 1000 },
+      { "nombre": "Bolitas de Queso", "precio": 500, "nota": "Incluye mayonesa" }
+    ]},
+    { "emoji": "🍺", "nombre": "Cervezas", "items": [
+      { "nombre": "Cristal", "precio": 650 },
+      { "nombre": "Holandia", "precio": 520 },
+      { "nombre": "Bucanero", "precio": 650 },
+      { "nombre": "Mayabe", "precio": 650 }
+    ]},
+    { "emoji": "🥤", "nombre": "Refrescos", "items": [
+      { "nombre": "Refresco de Naranja", "precio": 530 },
+      { "nombre": "Refresco de Limón", "precio": 530 },
+      { "nombre": "Refresco de Cola", "precio": 530 },
+      { "nombre": "Refresco de Piña", "precio": 530 },
+      { "nombre": "Refresco Frapeado", "precio": 200 },
+      { "nombre": "Jugos de Cajita", "precio": 330 },
+      { "nombre": "Jugos de Lata", "precio": 540 },
+      { "nombre": "Agua Mineral", "precio": 250 },
+      { "nombre": "Malta", "precio": 650 }
+    ]},
+    { "emoji": "🍹", "nombre": "Batidos", "items": [
+      { "nombre": "Guayaba", "precio": 200 },
+      { "nombre": "Mamey", "precio": 300 },
+      { "nombre": "Fresa", "precio": 300 }
+    ]},
+    { "emoji": "☕", "nombre": "Café", "items": [
+      { "nombre": "Café Bustelo", "precio": 40 },
+      { "nombre": "Café Frapé", "precio": 500 }
+    ]}
+  ]
+};
+
+/* ══════════ estado ══════════ */
+const LS_KEY = "menuAdminCreds";
+let DATA = null, draft = null, creds = null;
+try { creds = JSON.parse(localStorage.getItem(LS_KEY) || "null"); } catch (e) { creds = null; }
+
+const $ = s => document.querySelector(s);
+const menuEl = $("#menu"), chipsEl = $("#chips"), qEl = $("#q"), footDate = $("#footDate");
+const overlay = $("#overlay"), loginView = $("#loginView"), editorView = $("#editorView");
+const loginMsg = $("#loginMsg"), saveMsg = $("#saveMsg"), edCats = $("#edCats"), jsonPre = $("#jsonPre");
+const clone = o => JSON.parse(JSON.stringify(o));
+const fmt = n => "$" + (Number(n) || 0).toFixed(2);
+const el = (tag, cls, txt) => { const d = document.createElement(tag); if (cls) d.className = cls; if (txt != null) d.textContent = txt; return d; };
+
+/* ══════════ carga de datos ══════════ */
+async function loadData() {
+  try {
+    const r = await fetch("data.json", { cache: "no-store" });
+    if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.categorias)) return j; }
+  } catch (e) {}
+  return clone(DEFAULT_DATA);
+}
+
+/* ══════════ render público ══════════ */
+let revealObs = null, spyObs = null;
+function renderMenu() {
+  const q = (qEl.value || "").trim().toLowerCase();
+  menuEl.textContent = ""; chipsEl.textContent = "";
+  if (revealObs) revealObs.disconnect();
+  if (spyObs) spyObs.disconnect();
+  revealObs = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); revealObs.unobserve(en.target); } }), { threshold: .08 });
+  spyObs = new IntersectionObserver(es => es.forEach(en => {
+    if (en.isIntersecting) {
+      chipsEl.querySelectorAll(".chip").forEach(c => c.classList.toggle("active", c.dataset.target === en.target.id));
+    }
+  }), { rootMargin: "-42% 0px -52% 0px" });
+
+  const secs = [];
+  (DATA.categorias || []).forEach((cat, ci) => {
+    const items = (cat.items || []).filter(it => !q || ((it.nombre || "") + " " + (it.nota || "")).toLowerCase().includes(q));
+    if (!items.length) return;
+    const sec = el("section", "cat reveal"); sec.id = "cat-" + ci;
+    const h = el("h2", "catTitle");
+    h.appendChild(el("span", "catEmoji", cat.emoji || "🍽️"));
+    h.appendChild(document.createTextNode(cat.nombre || "Sin nombre"));
+    sec.appendChild(h);
+    const ul = el("ul", "items");
+    items.forEach(it => {
+      const li = el("li", "item");
+      const nm = el("div", "iname", it.nombre || "");
+      if (it.nota) nm.appendChild(el("span", "nota", it.nota));
+      li.append(nm, el("span", "dots"), el("span", "price", fmt(it.precio)));
+      ul.appendChild(li);
+    });
+    sec.appendChild(ul); menuEl.appendChild(sec); secs.push(sec);
+    revealObs.observe(sec); spyObs.observe(sec);
+    const chip = el("button", "chip", (cat.emoji || "🍽️") + " " + (cat.nombre || ""));
+    chip.dataset.target = "cat-" + ci;
+    chip.addEventListener("click", () => { const t = document.getElementById("cat-" + ci); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); });
+    chipsEl.appendChild(chip);
+  });
+  if (!secs.length) menuEl.appendChild(el("p", "empty", "No hay resultados para tu búsqueda…"));
+  footDate.textContent = DATA.actualizado
+    ? "Menú actualizado: " + new Date(DATA.actualizado + "T12:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })
+    : "";
+}
+
+/* ══════════ utilidades base64 UTF-8 ══════════ */
+function b64enc(str) {
+  const bytes = new TextEncoder().encode(str); let bin = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+function b64dec(str) {
+  const bin = atob(str.replace(/\s/g, ""));
+  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+}
+
+/* ══════════ API GitHub ══════════ */
+async function gh(path, opts) {
+  const res = await fetch("https://api.github.com" + path, Object.assign({
+    headers: {
+      "Authorization": "Bearer " + creds.token,
+      "Accept": "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28"
+    }
+  }, opts || {}));
+  if (!res.ok) {
+    let msg = "Error " + res.status;
+    try { const j = await res.json(); if (j && j.message) msg += ": " + j.message; } catch (e) {}
+    const err = new Error(msg); err.status = res.status; throw err;
+  }
+  return res.status === 204 ? null : res.json();
+}
+const contentsPath = () => "/repos/" + encodeURIComponent(creds.owner) + "/" + encodeURIComponent(creds.repo) + "/contents/" + creds.path.replace(/^\/+/, "") + "?ref=" + encodeURIComponent(creds.branch);
+
+/* ══════════ panel: abrir / cerrar ══════════ */
+function openAdmin() {
+  overlay.hidden = false;
+  requestAnimationFrame(() => overlay.classList.add("open"));
+  history.replaceState(null, "", "#admin");
+  saveMsg.textContent = "";
+  if (creds) { $("#tk").value = creds.token || ""; $("#ow").value = creds.owner || ""; $("#rp").value = creds.repo || ""; $("#br").value = creds.branch || "main"; $("#pt").value = creds.path || "data.json"; connect(true); }
+  else { loginView.hidden = false; editorView.hidden = true; loginMsg.textContent = ""; }
+}
+function closeAdmin() {
+  overlay.classList.remove("open");
+  history.replaceState(null, "", location.pathname + location.search);
+  setTimeout(() => { overlay.hidden = true; }, 300);
+}
+$("#closeBtn").addEventListener("click", closeAdmin);
+overlay.addEventListener("click", e => { if (e.target === overlay) closeAdmin(); });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !overlay.hidden) closeAdmin();
+  if (e.ctrlKey && e.shiftKey && (e.key === "M" || e.key === "m")) { e.preventDefault(); overlay.hidden ? openAdmin() : closeAdmin(); }
+});
+$("#adminDot").addEventListener("click", openAdmin);
+
+/* ══════════ login / conexión ══════════ */
+$("#loginForm").addEventListener("submit", e => {
+  e.preventDefault();
+  creds = {
+    token: $("#tk").value.trim(), owner: $("#ow").value.trim(),
+    repo: $("#rp").value.trim(), branch: $("#br").value.trim() || "main",
+    path: $("#pt").value.trim() || "data.json"
+  };
+  localStorage.setItem(LS_KEY, JSON.stringify(creds));
+  connect(false);
+});
+async function connect(silent) {
+  loginView.hidden = false; editorView.hidden = true;
+  loginMsg.textContent = "Conectando…";
+  try {
+    await gh("/user");
+    try {
+      const c = await gh(contentsPath());
+      const j = JSON.parse(b64dec(c.content));
+      if (!j || !Array.isArray(j.categorias)) throw new Error("data.json sin categorías");
+      draft = j;
+    } catch (e) {
+      draft = clone(DATA);
+      if (e.status !== 404 && !silent) loginMsg.textContent = "Nota: no se pudo leer el remoto (" + e.message + "). Se edita el menú actual.";
+    }
+    localStorage.setItem(LS_KEY, JSON.stringify(creds));
+    loginView.hidden = true; editorView.hidden = false; loginMsg.textContent = "";
+    renderEditor();
+  } catch (err) {
+    creds = null; localStorage.removeItem(LS_KEY);
+    loginView.hidden = false; editorView.hidden = true;
+    loginMsg.textContent = "✖ " + err.message;
+  }
+}
+$("#logoutBtn").addEventListener("click", () => {
+  creds = null; localStorage.removeItem(LS_KEY); draft = null;
+  editorView.hidden = true; loginView.hidden = false; loginMsg.textContent = "Sesión cerrada en este navegador.";
+});
+
+/* ══════════ editor ══════════ */
+function inp(type, val, cls) { const i = document.createElement("input"); i.type = type; i.value = val == null ? "" : val; if (cls) i.className = cls; return i; }
+function btn(txt, cls, fn) { const b = el("button", "btn " + (cls || "ghost mini"), txt); b.type = "button"; b.addEventListener("click", fn); return b; }
+
+function renderEditor() {
+  edCats.textContent = "";
+  (draft.categorias || []).forEach((cat, ci) => {
+    const card = el("div", "catCard");
+    const head = el("div", "catHead");
+    const iEm = inp("text", cat.emoji || "", "emoji"); iEm.oninput = () => { cat.emoji = iEm.value; };
+    const iNm = inp("text", cat.nombre || "", "grow"); iNm.oninput = () => { cat.nombre = iNm.value; };
+    head.append(iEm, iNm,
+      btn("↑", "ghost mini", () => moveCat(ci, -1)),
+      btn("↓", "ghost mini", () => moveCat(ci, 1)),
+      btn("🗑", "danger mini", () => { if (confirm('Eliminar la categoría "' + (cat.nombre || "") + '"?')) { draft.categorias.splice(ci, 1); renderEditor(); } })
+    );
+    card.appendChild(head);
+    const list = el("div", "itemRows");
+    (cat.items || []).forEach((it, ii) => {
+      const row = el("div", "itemRow");
+      const n = inp("text", it.nombre || "", "i-name"); n.placeholder = "Nombre"; n.oninput = () => { it.nombre = n.value; };
+      const p = inp("number", it.precio ?? 0, "i-price"); p.min = "0"; p.step = "any"; p.oninput = () => { it.precio = parseFloat(p.value) || 0; };
+      const t = inp("text", it.nota || "", "i-nota"); t.placeholder = "Nota (opcional)"; t.oninput = () => { it.nota = t.value; };
+      row.append(n, p, t, btn("🗑", "danger mini i-del", () => { cat.items.splice(ii, 1); renderEditor(); }));
+      list.appendChild(row);
+    });
+    card.appendChild(list);
+    card.appendChild(btn("➕ Añadir artículo", "ghost mini", () => { (cat.items = cat.items || []).push({ nombre: "Nuevo artículo", precio: 0 }); renderEditor(); }));
+    edCats.appendChild(card);
+  });
+  jsonPre.textContent = JSON.stringify(draft, null, 2);
+}
+function moveCat(i, d) {
+  const j = i + d; if (j < 0 || j >= draft.categorias.length) return;
+  const t = draft.categorias[i]; draft.categorias[i] = draft.categorias[j]; draft.categorias[j] = t;
+  renderEditor();
+}
+$("#addCatBtn").addEventListener("click", () => {
+  draft.categorias = draft.categorias || [];
+  draft.categorias.push({ emoji: "🍽️", nombre: "Nueva categoría", items: [] });
+  renderEditor();
+  edCats.lastElementChild.scrollIntoView({ behavior: "smooth", block: "center" });
+});
+
+/* ══════════ guardar / exportar ══════════ */
+$("#saveBtn").addEventListener("click", async () => {
+  saveMsg.textContent = "Guardando…";
+  try {
+    draft.actualizado = new Date().toISOString().slice(0, 10);
+    const json = JSON.stringify(draft, null, 2);
+    let sha;
+    try { sha = (await gh(contentsPath())).sha; } catch (e) { if (e.status !== 404) throw e; }
+    const body = { message: "🍽️ Menú actualizado (" + draft.actualizado + ")", content: b64enc(json), branch: creds.branch };
+    if (sha) body.sha = sha;
+    await gh(contentsPath(), { method: "PUT", body: JSON.stringify(body) });
+    DATA = clone(draft); renderMenu(); jsonPre.textContent = json;
+    saveMsg.textContent = ""; toast("✔ Menú guardado en GitHub");
+  } catch (err) { saveMsg.textContent = "✖ " + err.message; toast("✖ No se pudo guardar"); }
+});
+$("#applyBtn").addEventListener("click", () => { DATA = clone(draft); renderMenu(); toast("🧪 Aplicado en esta sesión (sin commit)"); });
+$("#downloadBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(draft, null, 2)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "data.json";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 800);
+  toast("⬇️ data.json descargado");
+});
+$("#copyBtn").addEventListener("click", async () => {
+  const txt = JSON.stringify(draft, null, 2);
+  try { await navigator.clipboard.writeText(txt); toast("📋 JSON copiado"); }
+  catch (e) { jsonPre.textContent = txt; toast("Copia manual desde “Ver data.json”"); }
+});
+$("#resetBtn").addEventListener("click", () => {
+  if (confirm("¿Restaurar el menú integrado? (se pierde lo editado sin guardar)")) { draft = clone(DEFAULT_DATA); renderEditor(); toast("♻️ Menú restaurado"); }
+});
+
+/* ══════════ toast ══════════ */
+let toastTimer = null;
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+/* ══════════ arranque ══════════ */
+qEl.addEventListener("input", renderMenu);
+(async function init() {
+  DATA = await loadData();
+  renderMenu();
+  if (location.hash === "#admin" || new URLSearchParams(location.search).has("admin")) openAdmin();
+})();
+</script>
+</body>
+</html>
