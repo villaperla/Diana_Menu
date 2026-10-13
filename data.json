@@ -24,6 +24,10 @@
         {
           "nombre": "Sandwis de Jamón",
           "precio": 350
+        },
+        {
+          "nombre": "Pan con Cerdo",
+          "precio": 1200
         }
       ]
     },
