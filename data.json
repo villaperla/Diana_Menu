@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-10-13",
+  "actualizado": "2026-10-16",
   "categorias": [
     {
       "emoji": "🥪",
@@ -7,7 +7,7 @@
       "items": [
         {
           "nombre": "Pan con Hamburguezas",
-          "precio": 600
+          "precio": 500
         },
         {
           "nombre": "Super Hamburguezas Doble Carne",
@@ -15,7 +15,7 @@
         },
         {
           "nombre": "Pan con Tortilla",
-          "precio": 500
+          "precio": 320
         },
         {
           "nombre": "Sandwis de Jamón y Queso",
@@ -24,10 +24,6 @@
         {
           "nombre": "Sandwis de Jamón",
           "precio": 350
-        },
-        {
-          "nombre": "Pan con Cerdo",
-          "precio": 1200
         }
       ]
     },
@@ -37,7 +33,7 @@
       "items": [
         {
           "nombre": "Entremés",
-          "precio": 400
+          "precio": 500
         },
         {
           "nombre": "Ensalada Fría",
@@ -48,37 +44,13 @@
           "precio": 1000
         },
         {
-          "nombre": "Croquetas",
-          "precio": 500
-        },
-        {
           "nombre": "Plato Mixto",
-          "precio": 1000
-        },
-        {
-          "nombre": "Enchilado de Langosta",
-          "precio": 1400
-        },
-        {
-          "nombre": "Enchilado de Cangrejo",
-          "precio": 1200
-        },
-        {
-          "nombre": "Charritas",
-          "precio": 250
-        },
-        {
-          "nombre": "Tostones",
-          "precio": 250
-        },
-        {
-          "nombre": "Cóctel de Langosta",
           "precio": 1000
         },
         {
           "nombre": "Bolitas de Queso",
           "precio": 500,
-          "nota": "Incluye mayonesa"
+          "nota": ""
         }
       ]
     },
@@ -88,14 +60,6 @@
       "items": [
         {
           "nombre": "Cristal",
-          "precio": 650
-        },
-        {
-          "nombre": "Holandia",
-          "precio": 520
-        },
-        {
-          "nombre": "Bucanero",
           "precio": 650
         },
         {
@@ -110,59 +74,26 @@
       "items": [
         {
           "nombre": "Refresco de Naranja",
-          "precio": 530
+          "precio": 570
         },
         {
           "nombre": "Refresco de Limón",
-          "precio": 530
+          "precio": 570
         },
         {
           "nombre": "Refresco de Cola",
-          "precio": 530
+          "precio": 570
         },
         {
           "nombre": "Refresco de Piña",
-          "precio": 530
-        },
-        {
-          "nombre": "Refresco Frapeado",
-          "precio": 200
-        },
-        {
-          "nombre": "Jugos de Cajita",
-          "precio": 330
-        },
-        {
-          "nombre": "Jugos de Lata",
-          "precio": 540
-        },
-        {
-          "nombre": "Agua Mineral",
-          "precio": 250
-        },
-        {
-          "nombre": "Malta",
-          "precio": 650
+          "precio": 570
         }
       ]
     },
     {
       "emoji": "🍹",
       "nombre": "Batidos",
-      "items": [
-        {
-          "nombre": "Guayaba",
-          "precio": 200
-        },
-        {
-          "nombre": "Mamey",
-          "precio": 300
-        },
-        {
-          "nombre": "Fresa",
-          "precio": 300
-        }
-      ]
+      "items": []
     },
     {
       "emoji": "☕",
@@ -173,8 +104,18 @@
           "precio": 40
         },
         {
-          "nombre": "Café Frapé",
-          "precio": 500
+          "nombre": "Café expresso",
+          "precio": 130,
+          "nota": ""
+        },
+        {
+          "nombre": "Doble expresso",
+          "precio": 260,
+          "nota": ""
+        },
+        {
+          "nombre": "Café cortadito",
+          "precio": 280
         }
       ]
     }
