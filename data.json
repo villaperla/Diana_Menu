@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-10-16",
+  "actualizado": "2026-10-17",
   "categorias": [
     {
       "emoji": "🥪",
@@ -51,6 +51,10 @@
           "nombre": "Bolitas de Queso",
           "precio": 500,
           "nota": ""
+        },
+        {
+          "nombre": "Croquetas ",
+          "precio": 500
         }
       ]
     },
