@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-10-17",
+  "actualizado": "2026-10-19",
   "categorias": [
     {
       "emoji": "🥪",
@@ -55,6 +55,10 @@
         {
           "nombre": "Croquetas ",
           "precio": 500
+        },
+        {
+          "nombre": "Cóctel de langosta ",
+          "precio": 1000
         }
       ]
     },
@@ -97,7 +101,20 @@
     {
       "emoji": "🍹",
       "nombre": "Batidos",
-      "items": []
+      "items": [
+        {
+          "nombre": "Batido de guayaba",
+          "precio": 300
+        },
+        {
+          "nombre": "Batido de platanito",
+          "precio": 300
+        },
+        {
+          "nombre": "Batido de frutabomba",
+          "precio": 300
+        }
+      ]
     },
     {
       "emoji": "☕",
