@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-10-19",
+  "actualizado": "2026-10-23",
   "categorias": [
     {
       "emoji": "🥪",
@@ -55,10 +55,6 @@
         {
           "nombre": "Croquetas ",
           "precio": 500
-        },
-        {
-          "nombre": "Cóctel de langosta ",
-          "precio": 1000
         }
       ]
     },
@@ -67,12 +63,8 @@
       "nombre": "Cervezas",
       "items": [
         {
-          "nombre": "Cristal",
-          "precio": 650
-        },
-        {
-          "nombre": "Mayabe",
-          "precio": 650
+          "nombre": "La fría ",
+          "precio": 630
         }
       ]
     },
@@ -82,19 +74,15 @@
       "items": [
         {
           "nombre": "Refresco de Naranja",
-          "precio": 570
+          "precio": 600
         },
         {
           "nombre": "Refresco de Limón",
-          "precio": 570
-        },
-        {
-          "nombre": "Refresco de Cola",
-          "precio": 570
+          "precio": 600
         },
         {
           "nombre": "Refresco de Piña",
-          "precio": 570
+          "precio": 600
         }
       ]
     },
@@ -107,36 +95,16 @@
           "precio": 300
         },
         {
-          "nombre": "Batido de platanito",
-          "precio": 300
-        },
-        {
           "nombre": "Batido de frutabomba",
           "precio": 300
-        }
-      ]
-    },
-    {
-      "emoji": "☕",
-      "nombre": "Café",
-      "items": [
-        {
-          "nombre": "Café Bustelo",
-          "precio": 40
         },
         {
-          "nombre": "Café expresso",
-          "precio": 130,
-          "nota": ""
+          "nombre": "Batido de mamey",
+          "precio": 450
         },
         {
-          "nombre": "Doble expresso",
-          "precio": 260,
-          "nota": ""
-        },
-        {
-          "nombre": "Café cortadito",
-          "precio": 280
+          "nombre": "Batido de maní ",
+          "precio": 450
         }
       ]
     }
