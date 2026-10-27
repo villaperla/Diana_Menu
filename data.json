@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-10-23",
+  "actualizado": "2026-10-27",
   "categorias": [
     {
       "emoji": "🥪",
@@ -14,16 +14,16 @@
           "precio": 1000
         },
         {
-          "nombre": "Pan con Tortilla",
-          "precio": 320
-        },
-        {
           "nombre": "Sandwis de Jamón y Queso",
           "precio": 400
         },
         {
           "nombre": "Sandwis de Jamón",
           "precio": 350
+        },
+        {
+          "nombre": "Pan con jamonada",
+          "precio": 230
         }
       ]
     },
@@ -75,14 +75,6 @@
         {
           "nombre": "Refresco de Naranja",
           "precio": 600
-        },
-        {
-          "nombre": "Refresco de Limón",
-          "precio": 600
-        },
-        {
-          "nombre": "Refresco de Piña",
-          "precio": 600
         }
       ]
     },
@@ -97,14 +89,6 @@
         {
           "nombre": "Batido de frutabomba",
           "precio": 300
-        },
-        {
-          "nombre": "Batido de mamey",
-          "precio": 450
-        },
-        {
-          "nombre": "Batido de maní ",
-          "precio": 450
         }
       ]
     }
